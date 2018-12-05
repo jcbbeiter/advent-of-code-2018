@@ -1,28 +1,20 @@
-def react_step(p):
+def react(p):
     reacted = []
 
-    last = '-'
+    does_react = lambda a,b: (a.upper() == b.upper() and a != b)
 
-    for ch in p:
-        if last.upper() == ch.upper() and ch != last:
-            last = '-'
+    i = 0
+    while i < len(p):
+        if i != len(p)-1 and does_react(p[i],p[i+1]):
+            i += 2
         else:
-            if last != '-':
-                reacted.append(last)
-            last = ch
-    if p[-1] == p[-2]:
-        reacted.pop()
-    else:
-        reacted.append(p[-1])
-    return ''.join(reacted)
+            if len(reacted) > 0 and does_react(p[i],reacted[-1]):
+                reacted.pop()
+            else:
+                reacted.append(p[i])
+            i += 1
 
-def react(p):
-    p = list(p)
-    last_len = -1
-    while len(p) != last_len:
-        last_len = len(p)
-        p = react_step(p)
-    return ''.join(p)
+    return ''.join(reacted)
 
 def trimmed_polymers(p):
     for t in set(p.lower()):
@@ -38,5 +30,3 @@ if __name__ == '__main__':
 
     #2
     print(min(len(react(p)) for p in trimmed_polymers(polymer)))
-
-
